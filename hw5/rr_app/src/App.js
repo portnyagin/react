@@ -9,22 +9,32 @@ import {connect, Provider} from 'react-redux';
 const ACTION_CHANGE_ACCOUNT= 'ACTION_CHANGE_ACCOUNT';
 const ACTION_CHANGE_CLIENT = 'ACTION_CHANGE_CLIENT0';
 
-const actionChangeAccount = {
-  type: ACTION_CHANGE_ACCOUNT, 
-  payload: null
-}
 
-const actionChangeClient = {
-  type:ACTION_CHANGE_CLIENT,
-  payload: null
-}
-
+const changeAccount = (newAccount) => {
+  return  {
+    type: ACTION_CHANGE_ACCOUNT, 
+    payload: newAccount
+  }
+};
+const changeClient= (newClient) => {
+  return  {
+    type: ACTION_CHANGE_ACCOUNT, 
+    payload: newClient
+  }
+};
 
 const initialState = {
-  account:'',
-  client: ''
+  account:'47422',
+  client: 'PAO Sberbank'
 };
-const rootReducer = (state=initialState, action) => {return state};
+
+const rootReducer = (state=initialState, action) => {
+  switch (action.type) {
+    case ACTION_CHANGE_ACCOUNT:
+      return {...state, account: action.payload}
+  }
+  return state
+};
 const store=createStore (rootReducer);
 console.log ("state:");
 console.log (store.getState());
@@ -32,10 +42,15 @@ console.log (store.getState());
 
 class Account extends Component {
   render () {
+    const dispatch = this.props.dispatch;
     return (
       <div className="Account">
           <h3> Счет </h3>
-          <input type="Text" name = "iAccount" placeholder="Account"/>  
+          <input 
+            type="Text" 
+            value = {this.props.account} 
+            placeholder="Account"
+          />  
       </div>
     );
   }
@@ -43,10 +58,18 @@ class Account extends Component {
 
 class Client extends Component {
   render () {
+    const dispatch = this.props.dispatch;
     return (
       <div className="Client">
           <h3> Клиент </h3>
-          <input type="Text" name = "iClient" placeholder="Client"/>  
+          <input 
+            type="Text" 
+            value ={this.props.client} 
+            placeholder="Client"
+            onChange = {(event)=> {
+                dispatch (changeAccount(event.target.value()));
+            }}
+          />  
       </div>
     );
   }
@@ -55,24 +78,46 @@ class Client extends Component {
 
 class App extends Component {
   render () {
+    
     return (
-      <Provider store={store}>
-        <div className="App">
-          <div className="e1"> <Account /> </div>
-          <div className="e1"> <Client /> </div>
-          <div/>
+      
+        <div>
+            <div > <WrappedAccount /> </div>
+            <div > <WrappedClient /> </div>
+            <div/>
         </div>
-      </Provider>
+      
     );
   }
 }
 
-const mapStateProps = (state) => {
-  console.log ('mapStateProps')
-  return { test:1}
+const mapAccountProps = (state) => {
+  console.log ('mapAccountProps')
+  return { 
+    account: state.account
+  }
 }
 
-const WrappedApp = connect (mapStateProps)(App)
+const mapClientProps = (state) => {
+  console.log ('mapClintProps')
+  return { 
+    client: state.client
+  }
+}
+
+const WrappedAccount = connect (mapAccountProps)(Account)
+const WrappedClient = connect (mapClientProps)(Client)
+
+class Main extends Component {
+  render () {
+    return (
+    <Provider store={store}>
+      <App/>
+    </Provider>
+    )
+  }
+}
+
 /*class App extends Component {
   render() {
     return (
@@ -89,4 +134,4 @@ const WrappedApp = connect (mapStateProps)(App)
   }
 }*/
 
-export default App;
+export default Main;
