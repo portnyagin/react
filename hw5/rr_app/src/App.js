@@ -7,7 +7,7 @@ import {createStore} from 'redux';
 import {connect, Provider} from 'react-redux';
 
 const ACTION_CHANGE_ACCOUNT= 'ACTION_CHANGE_ACCOUNT';
-const ACTION_CHANGE_CLIENT = 'ACTION_CHANGE_CLIENT0';
+const ACTION_CHANGE_CLIENT = 'ACTION_CHANGE_CLIENT';
 
 
 const changeAccount = (newAccount) => {
@@ -18,7 +18,7 @@ const changeAccount = (newAccount) => {
 };
 const changeClient= (newClient) => {
   return  {
-    type: ACTION_CHANGE_ACCOUNT, 
+    type: ACTION_CHANGE_CLIENT, 
     payload: newClient
   }
 };
@@ -29,15 +29,22 @@ const initialState = {
 };
 
 const rootReducer = (state=initialState, action) => {
+  console.log ('reducer');
   switch (action.type) {
     case ACTION_CHANGE_ACCOUNT:
+      // console.log ('rootReducer:ACTION_CHANGE_ACCOUNT');
+      // console.log({...state, account: action.payload});
       return {...state, account: action.payload}
+    case ACTION_CHANGE_CLIENT:
+      // console.log ('rootReducer:ACTION_CHANGE_CLIENT');
+      // console.log({...state, account: action.payload});
+      return {...state, client: action.payload}
   }
   return state
 };
 const store=createStore (rootReducer);
-console.log ("state:");
-console.log (store.getState());
+// console.log ("state:");
+// console.log (store.getState());
 
 
 class Account extends Component {
@@ -50,6 +57,10 @@ class Account extends Component {
             type="Text" 
             value = {this.props.account} 
             placeholder="Account"
+            onChange = {(event)=> {
+              console.log('Account.OnChange');
+              dispatch (changeAccount(event.target.value))
+            }}
           />  
       </div>
     );
@@ -67,7 +78,7 @@ class Client extends Component {
             value ={this.props.client} 
             placeholder="Client"
             onChange = {(event)=> {
-                dispatch (changeAccount(event.target.value()));
+                dispatch (changeClient(event.target.value));
             }}
           />  
       </div>
@@ -78,21 +89,22 @@ class Client extends Component {
 
 class App extends Component {
   render () {
-    
+    console.log ('App Component:');
+    console.log (this.props);
     return (
-      
         <div>
             <div > <WrappedAccount /> </div>
             <div > <WrappedClient /> </div>
-            <div/>
+            <div> 
+                {this.props.client + ' ' + this.props.account} 
+            </div>
         </div>
-      
     );
   }
 }
 
 const mapAccountProps = (state) => {
-  console.log ('mapAccountProps')
+    console.log ('mapAccountProps')
   return { 
     account: state.account
   }
