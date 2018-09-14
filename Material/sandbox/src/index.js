@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 // import {  BrowserRouter , Route, Switch } from "react-router-dom";
 
 import registerServiceWorker from './registerServiceWorker';
+
 // import Organization from './components/organization';
 // import SecondComponent from './components/secondComponent';
 
@@ -22,7 +23,7 @@ const App=() => (
 const Header = ()=> (
     <div >Header</div>
 )
-ReactDOM.render (
+ReactDOM.render()  {
     <App>
       <Header/>
       
@@ -37,5 +38,5 @@ ReactDOM.render (
     </App>
     
 , document.getElementById('root')       
-);
+};
 registerServiceWorker();
